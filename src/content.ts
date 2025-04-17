@@ -1,6 +1,17 @@
 //Features: 
+//watch the rais stream
+//give reports of errors
+//possibly send emails
 
 //to do
+//walkthrough
+//constantly check if its time to start 5 - 8 pm
+//once started ensure rais is opened / possibly logged in
+//scan every 5 minutes if anything stopped
+//once stopped deteced - email and open screen - wait for user acknowledgement
+//once acknowledged no longer throw errors/send emails for an hour
+//better to store what errored and remembet that, if its new email/send 
+//that way can keep constant watch
 
 function handleSearch() {
     //wait till page loads
