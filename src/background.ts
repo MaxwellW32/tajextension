@@ -18,7 +18,7 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.alarms.onAlarm.addListener(async (alarm) => {
     //run starter only if havent started
     if (alarm.name === "starter" && !programMonitoring) {
-        console.log(`running starter`)
+        // console.log(`running starter`)
 
         const now = new Date();
         const hour = now.getHours();
@@ -57,7 +57,7 @@ chrome.runtime.onMessage.addListener((msg) => {
 
     //stop monitoring
     if (msg.type === "stopMonitoring") {
-        console.log(`monitoring stopped`)
+        // console.log(`monitoring stopped`)
 
         chrome.alarms.clear("monitorStreams")
 

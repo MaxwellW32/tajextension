@@ -166,14 +166,14 @@ function main() {
             //create new if doesnt exist
             if (mainObj[seenScheduledStartText].error === undefined) {
                 mainObj[seenScheduledStartText].error = {
-                    errorText: "rais stream stopped",
+                    errorText: "",
                     acknowledged: false
                 }
 
-            } else {
-                //update records if exists already
-                mainObj[seenScheduledStartText].error!.errorText = "rais stream stopped"
             }
+
+            //update records if exists already
+            mainObj[seenScheduledStartText].error!.errorText = "rais stream stopped"
         }
     })
 
@@ -189,6 +189,8 @@ function main() {
             if (mainObj[eachKey].error === undefined) return
 
             chrome.runtime.sendMessage({ type: "errorAlert" });
+
+            //mark error as acknowledged
             mainObj[eachKey].error.acknowledged = true
         }
 
