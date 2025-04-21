@@ -3,14 +3,11 @@ const MONITOR_TIMES = [17, 20]; // 5pm and 8pm in 24-hr
 
 let programMonitoring = false
 
-//edit to do
-//turn on stop running
-
 chrome.runtime.onInstalled.addListener(() => {
     // start at appropriate time - every 10 minutes check if we can start
     if (!programMonitoring) {
         chrome.alarms.create("starter", {
-            periodInMinutes: 5
+            periodInMinutes: 20
         });
     }
 });
@@ -31,7 +28,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 
             //start 5 minute checker
             chrome.alarms.create("monitorStreams", {
-                periodInMinutes: 1
+                periodInMinutes: 5
             });
 
             //start once initially
@@ -40,7 +37,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     }
 
     if (alarm.name === "monitorStreams") {
-        console.log(`running monitorStreams`)
+        // console.log(`running monitorStreams`)
 
         monitorStreamPage();
     }
