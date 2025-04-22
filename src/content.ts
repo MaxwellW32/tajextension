@@ -169,7 +169,7 @@ async function main() {
         }
     })
 
-    // console.log(`mainObj`, mainObj)
+    console.log(`mainObj`, mainObj)
 
     let runningDetected = false
 

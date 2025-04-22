@@ -49,12 +49,27 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         startUpMonitorLoop();
     }
 });
+//start monitor loop
+async function startUpMonitorLoop() {
+    //from client start loop if not started already
+    const monitoring = await getMonitoringStatus();
+    if (monitoring)
+        return;
+    //update monitoring
+    await setMonitoringStatus(true);
+    //clear previous alarm
+    await chrome.alarms.clear("monitorStreams");
+    //start 5 minute checker
+    chrome.alarms.create("monitorStreams", {
+        periodInMinutes: 5
+    });
+}
 async function monitorStreamPage() {
     const tabs = await chrome.tabs.query({ url: `${TARGET_URL}/*` });
     // If the tab doesn't exist, create it
     if (tabs.length === 0) {
         chrome.tabs.create({ url: TARGET_URL });
-        return; // No need to run again immediately
+        return;
     }
     const tab = tabs[0];
     if (!tab.id)
@@ -69,21 +84,6 @@ async function monitorStreamPage() {
     chrome.scripting.executeScript({
         target: { tabId: tab.id },
         files: ["out/content.js"]
-    });
-}
-//start monitor loop
-async function startUpMonitorLoop() {
-    //from client start loop if not started already
-    const monitoring = await getMonitoringStatus();
-    if (monitoring)
-        return;
-    //update monitoring
-    await setMonitoringStatus(true);
-    //clear previous alarm
-    await chrome.alarms.clear("monitorStreams");
-    //start 5 minute checker
-    chrome.alarms.create("monitorStreams", {
-        periodInMinutes: 5
     });
 }
 async function getMonitoringStatus() {

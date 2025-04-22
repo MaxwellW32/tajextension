@@ -130,7 +130,7 @@ async function main() {
             mainObj[seenScheduledStartText].error.errorText = "rais stream stopped";
         }
     });
-    // console.log(`mainObj`, mainObj)
+    console.log(`mainObj`, mainObj);
     let runningDetected = false;
     Object.entries(mainObj).map(eachEntry => {
         const eachKey = eachEntry[0];
