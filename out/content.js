@@ -2,20 +2,22 @@
 //Features: 
 //watch the rais stream
 //give reports of errors
-//possibly send emails
-function handleLoad() {
+//stops monitoring if nothing running - will restart at scheduled times
+//focus tab if logged out
+function load() {
     //wait till page loads
     window.addEventListener("load", () => {
         //give some time after that to ensure js loads
         setTimeout(main, 2000);
     });
 }
-handleLoad();
-function main() {
+load();
+async function main() {
     let mainObj = {};
     //check if on login screen
     const loggedIn = checkIfLoggedIn();
     if (!loggedIn) {
+        chrome.runtime.sendMessage({ type: "focusTab" });
         return;
     }
     //check for stored main Obj
@@ -160,8 +162,11 @@ function main() {
     localStorage.setItem("mainObjStorage", JSON.stringify(newMainObjInStorage));
 }
 function checkIfLoggedIn() {
-    let loggedIn = true;
-    //scan html
-    //if login screen detected focus window
-    return loggedIn;
+    const seenHtml = document.querySelector("body");
+    if (seenHtml === null)
+        return false;
+    if (seenHtml.innerHTML.toLowerCase().includes(`your session has been locked`)) {
+        return false;
+    }
+    return true;
 }

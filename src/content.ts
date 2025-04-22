@@ -1,17 +1,10 @@
 //Features: 
 //watch the rais stream
 //give reports of errors
-//possibly send emails
+//stops monitoring if nothing running - will restart at scheduled times
+//focus tab if logged out
 
 //to do
-//walkthrough
-//constantly check if its time to start 5 - 8 pm...
-//start...
-//once started ensure rais is opened / logged in___ 
-//save the data in an object...
-//scan every 5 minutes if anything stopped - //once stopped detected - email___ and open screen - wait for user acknowledgement...
-//once acknowledged mark on the object...
-//if jobs for today completed - then can stop
 
 type mainObjType = {
     [key: string]: {
@@ -28,21 +21,23 @@ type mainObjInStorageType = {
     timeWritten: Date
 }
 
-function handleLoad() {
+function load() {
     //wait till page loads
     window.addEventListener("load", () => {
         //give some time after that to ensure js loads
         setTimeout(main, 2000);
     });
 }
-handleLoad()
+load()
 
-function main() {
+async function main() {
     let mainObj: mainObjType = {}
 
     //check if on login screen
     const loggedIn = checkIfLoggedIn()
     if (!loggedIn) {
+        chrome.runtime.sendMessage({ type: "focusTab" });
+
         return
     }
 
@@ -216,10 +211,12 @@ function main() {
 }
 
 function checkIfLoggedIn() {
-    let loggedIn = true
+    const seenHtml = document.querySelector("body")
+    if (seenHtml === null) return false
 
-    //scan html
-    //if login screen detected focus window
+    if (seenHtml.innerHTML.toLowerCase().includes(`your session has been locked`)) {
+        return false
+    }
 
-    return loggedIn
+    return true
 }
