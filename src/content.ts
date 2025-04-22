@@ -1,7 +1,7 @@
 //Features: 
 //starts up at 5pm, 8pm
-//refreshed every 5 minutes to watch for errors
-//immediately show any errors
+//refreshes every 5 minutes to watch for errors
+//immediately shows any errors
 //stops monitoring if nothing running - will restart at scheduled times
 //focus tab if logged out
 
