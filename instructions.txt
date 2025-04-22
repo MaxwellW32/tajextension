@@ -9,9 +9,6 @@ You’ll get a folder with the extension files inside.
 Open Chrome Extensions page
 🌐 In Google Chrome, go to:
 
-arduino
-Copy
-Edit
 chrome://extensions/
 Turn on Developer Mode
 🧩 In the top right corner, toggle “Developer mode” ON.
