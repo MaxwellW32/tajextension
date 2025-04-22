@@ -1,7 +1,8 @@
 "use strict";
 //Features: 
-//watch the rais stream
-//give reports of errors
+//starts up at 5pm, 8pm
+//refreshed every 5 minutes to watch for errors
+//immediately show any errors
 //stops monitoring if nothing running - will restart at scheduled times
 //focus tab if logged out
 function load() {
@@ -14,26 +15,23 @@ function load() {
 load();
 async function main() {
     let mainObj = {};
-    //check if on login screen
+    //restart loop if client visits page
+    chrome.runtime.sendMessage({ type: "startUp" });
+    //send focus tab request if not logged in
     const loggedIn = checkIfLoggedIn();
     if (!loggedIn) {
         chrome.runtime.sendMessage({ type: "focusTab" });
         return;
     }
     //check for stored main Obj
-    const seenMainObjInStorageStrValue = localStorage.getItem("mainObjStorage");
-    if (seenMainObjInStorageStrValue !== null) {
-        const seenMainObjInStorage = JSON.parse(seenMainObjInStorageStrValue);
-        const seenTimeWritten = new Date(seenMainObjInStorage.timeWritten);
+    const storageCheckResult = await chrome.storage.local.get(["mainObjStorage"]);
+    if (storageCheckResult.mainObjStorage !== undefined) {
+        const seenTimeWritten = new Date(storageCheckResult.mainObjStorage.timeWritten);
         const timeDifference = Date.now() - seenTimeWritten.getTime();
         const canUse = timeDifference <= (1000 * 60 * 10); //10 minutes
-        //if written less than 10 minutes ago - use it
+        //reuse seen logs
         if (canUse) {
-            mainObj = seenMainObjInStorage.seenMainObj;
-        }
-        else {
-            //clear item from storage
-            localStorage.removeItem("mainObjStorage");
+            mainObj = storageCheckResult.mainObjStorage.seenMainObj;
         }
     }
     const errorKeywords = ["stopped"];
@@ -132,7 +130,7 @@ async function main() {
             mainObj[seenScheduledStartText].error.errorText = "rais stream stopped";
         }
     });
-    console.log(`mainObj`, mainObj);
+    // console.log(`mainObj`, mainObj)
     let runningDetected = false;
     Object.entries(mainObj).map(eachEntry => {
         const eachKey = eachEntry[0];
@@ -156,10 +154,10 @@ async function main() {
     //update object in storage
     const newMainObjInStorage = {
         seenMainObj: mainObj,
-        timeWritten: new Date()
+        timeWritten: `${new Date()}`
     };
-    //write to storage
-    localStorage.setItem("mainObjStorage", JSON.stringify(newMainObjInStorage));
+    //write to chrome storage
+    chrome.storage.local.set({ mainObjStorage: newMainObjInStorage });
 }
 function checkIfLoggedIn() {
     const seenHtml = document.querySelector("body");

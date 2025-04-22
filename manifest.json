@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Backup Stream Monitor",
+    "name": "Rais Job Monitor",
     "version": "1.0",
     "permissions": [
         "tabs",
