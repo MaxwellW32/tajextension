@@ -1,19 +1,26 @@
 {
     "manifest_version": 3,
-    "name": "Taxi request",
+    "name": "Rais Job Monitor",
     "version": "1.0",
     "permissions": [
         "tabs",
         "alarms",
         "scripting",
         "storage",
-        "notifications",
-        "activeTab"
+        "notifications"
     ],
     "host_permissions": [
-        "<all_urls>"
+        "https://gentax-external.ads.taj.gov.jm/*"
     ],
     "web_accessible_resources": [
+        {
+            "resources": [
+                "out/content.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        },
         {
             "resources": [
                 "icon.png"
@@ -21,10 +28,31 @@
             "matches": [
                 "<all_urls>"
             ]
+        },
+        {
+            "resources": [
+                "alert.html"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
         }
     ],
+    "content_scripts": [
+        {
+            "js": [
+                "out/content.js"
+            ],
+            "matches": [
+                "https://gentax-external.ads.taj.gov.jm/Monitoring/*"
+            ]
+        }
+    ],
+    "background": {
+        "service_worker": "out/background.js"
+    },
     "action": {
-        "default_title": "Automate taxi request",
+        "default_title": "Monitor Streams",
         "default_popup": "popup.html",
         "default_icon": "icon.png"
     }
