@@ -62,4 +62,3 @@ async function updatePopup() {
     `;
 }
 updatePopup();
-

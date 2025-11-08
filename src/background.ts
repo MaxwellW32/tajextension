@@ -3,7 +3,7 @@ const MONITOR_TIMES = [17, 20]; // 5pm and 8pm in 24-hr
 
 chrome.runtime.onInstalled.addListener(async () => {
     chrome.alarms.create("starter", {
-        periodInMinutes: 20
+        periodInMinutes: 5
     });
 });
 
@@ -13,18 +13,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 chrome.alarms.onAlarm.addListener(async (alarm) => {
     //run starter only if program isn't monitoring
     if (alarm.name === "starter") {
-        const monitoring = await getMonitoringStatus()
-        if (monitoring) return
-
-        const now = new Date();
-        const hour = now.getHours();
-
-        if (MONITOR_TIMES.includes(hour)) {
-            startUpMonitorLoop()
-
-            //run initially
-            monitorStreamPage()
-        }
+        starter()
 
     } else if (alarm.name === "monitorStreams") {
         monitorStreamPage();
@@ -57,12 +46,21 @@ chrome.runtime.onMessage.addListener(async (msg) => {
         await chrome.tabs.update(tab.id, { "active": true });
 
     } else if (msg.type === "startUp") {
-        startUpMonitorLoop()
+        starter()
     }
 });
 
 
 
+
+async function starter() {
+    const now = new Date();
+    const hour = now.getHours();
+
+    if (MONITOR_TIMES.includes(hour)) {
+        startUpMonitorLoop()
+    }
+}
 
 //start monitor loop
 async function startUpMonitorLoop() {
