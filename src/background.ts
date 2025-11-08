@@ -3,7 +3,7 @@ const MONITOR_TIMES = [17, 20]; // 5pm and 8pm in 24-hr
 
 chrome.runtime.onInstalled.addListener(async () => {
     chrome.alarms.create("starter", {
-        periodInMinutes: 5
+        periodInMinutes: 20
     });
 });
 
